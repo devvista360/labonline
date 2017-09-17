@@ -1,0 +1,11 @@
+[
+    { "code": "AS", "name": "Adulto sin Identificación", "active": true, "useAsDefault": false },
+    { "code": "CC", "name": "Cédula de Ciudadanía", "active": true, "useAsDefault": true },
+    { "code": "CE", "name": "Cédula de Extranjería", "active": true, "useAsDefault": false },
+    { "code": "IN", "name": "Paciente Investigación", "active": true, "useAsDefault": false },
+    { "code": "MS", "name": "Menor sin Identificación", "active": false, "useAsDefault": false },
+    { "code": "NU", "name": "Número Único de Identificación", "active": true, "useAsDefault": false },
+    { "code": "PA", "name": "Pasaporte", "active": true, "useAsDefault": false },
+    { "code": "RC", "name": "Registro Civil", "active": true, "useAsDefault": false },
+    { "code": "TI", "name": "Tarjeta de Identidad", "active": true, "useAsDefault": false }
+]

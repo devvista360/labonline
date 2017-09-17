@@ -1,0 +1,87 @@
+﻿<div class="bgLogin">
+    <div class="container">
+        <div class="row vertical-offset-100">
+            <div class="col-md-4 col-md-offset-4">
+                <p class="headerForm"></p>
+                <div>
+                    <div *ngIf="message" class="alert alert-danger" [innerHTML]="message"></div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><span class="title">Resultados en l&iacute;nea</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" #f="ngForm" (ngSubmit)="f.form.valid && login()" novalidate>
+                            <fieldset>
+                                <div class="form-group">
+                                    <select class="form-control" [(ngModel)]="user.documentType"
+                                            #docType="ngModel" required id="docType" name="docType"
+                                            [ngClass]="{'InputError':docType.errors && (docType.dirty || docType.touched)}">
+                                        <option *ngFor="let t of documentTypes" [value]="t.code">{{t.name}}</option>
+                                    </select>
+                                    <div *ngIf="docType.errors && (docType.dirty || docType.touched)">
+                                        <div *ngIf="docType.hasError('required')" class="LabelError">
+                                            El tipo de documento es requerido.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="docId" autocomplete="off" id="docId"
+                                           [(ngModel)]="user.documentId" #docId="ngModel" required autofocus
+                                           [ngClass]="{'InputError':docId.errors && (pwd.dirty || pwd.touched)}"
+                                           placeholder="Número de documento" />
+                                    <div *ngIf="docId.errors && (docId.dirty || docId.touched )">
+                                        <div *ngIf="docId.hasError('required')" class="LabelError">
+                                            El documento es requerido.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" name="pwd" autocomplete="off" id="pwd"
+                                           [(ngModel)]="user.password" #pwd="ngModel" required value=""
+                                           [ngClass]="{'InputError':pwd.errors && (pwd.dirty || pwd.touched)}"
+                                           placeholder="Contraseña" />
+                                    <div *ngIf="pwd.errors && (pwd.dirty || pwd.touched)">
+                                        <div *ngIf="pwd.hasError('required')" class="LabelError">
+                                            La contraseña es requerida.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="userType" id="userType"
+                                            [ngClass]="{'InputError':userType.errors && (pwd.dirty || pwd.touched)}"
+                                            [(ngModel)]="user.userType" #userType="ngModel" required>
+                                        <option *ngFor="let u of userTypes" [value]="u.code">{{u.name}}</option>
+                                    </select>
+                                    <div *ngIf="userType.errors && (userType.dirty || userType.touched)">
+                                        <div *ngIf="userType.hasError('required')" class="LabelError">
+                                            El tipo de usuario es requerido.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-6">
+                                        <button type="submit" class="btn btn-warning px-2" [disabled]="!f.valid">Acceder</button>
+                                        <button class="btn btn-link px-0 text-right" [routerLink]="['/forgot']" type="button">¿Olvid&oacute; contrase&#241;a?</button>
+                                        <img *ngIf="isLoading" src="/assets/spin.svg" width="24" height="24" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="color: #00748A; background-color: #eee; text-align: center; width:auto;">
+                        <div style="padding-left: 10px; padding-right: 10px; margin-left: 10px; margin-right: 10px;">
+                            Cualquier inquietud  por favor comunicarse al 4440019 extensión 125.
+                            <br />
+                            Le recomendamos usar los navegadores Web Chrome 43 o superior, Firefox 38 o superior, Safari 8 o superior, Internet Explorer 10, 11.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

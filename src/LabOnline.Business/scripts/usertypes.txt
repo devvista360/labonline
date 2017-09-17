@@ -1,0 +1,5 @@
+[
+    { "code": "P", "name": "Paciente", "active": true, "useAsDefault": true },
+    { "code": "M", "name": "Medico Remitente", "active": true, "useAsDefault": false },
+    { "code": "E", "name": "Empresa", "active": true, "useAsDefault": false }
+]

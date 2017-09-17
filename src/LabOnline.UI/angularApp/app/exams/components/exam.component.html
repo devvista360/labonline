@@ -1,0 +1,140 @@
+﻿<div style="width:100%;">
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-md-12">
+                <h3><span class="title" style="float: left; margin: 5px;">Consulta de Resultados {{gridTitle}}</span></h3><br/>
+                <h3><span class="patientHeaderInfo">{{userFullName}} {{nationalId}}</span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div *ngIf="message" class="alert alert-danger" [innerHTML]="message"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-inline">
+                    <div class="input-group" style="width: 200px;float: left;" *ngIf="searchEnabled">
+                        <input class="form-control" (input)="filter = $event.target.value" maxlength="30" size="15" style="height: 30px;"
+                        placeholder="Buscar..." (keyup.enter)="search()" type="text" aria-describedby="search" autofocus />
+                        <span class="input-group-addon" id="search"><span class="glyphicon glyphicon-search" (click)="search()"></span></span>
+                    </div>
+                    <div class="form-group">
+                        <ul class="pagination pagination-sm" style="margin: 0px">
+                            <li>
+                                <select style="height: 30px;width: 110px;float: left;" class="form-control" 
+                                    (change)="onChange($event.target.value)" name="yearId" id="yearId">
+                                    <option *ngFor="let year of searchYears" [value]="year">A&ntilde;o {{year}}</option>
+                                </select>
+                            </li>
+                            <li class="disabled">
+                                <img *ngIf="isLoading" src="/assets/spin.svg" width="24" height="24" />
+                            </li>
+                            <li class="disabled">
+                                <a href="javascript:void(0);">Ordenes:&nbsp;<b>{{itemsCount}}</b></a>
+                            </li>
+                        </ul>
+                        <ul class="pagination pagination-sm" style="margin: 0px" *ngIf="grid.rowsCount > 1">
+                            <li>
+                                <select style="height: 30px;width: 73px;float: left;" class="form-control" 
+                                    (change)="grid.setPageSize($event.target.value)" name="pagingId" id="pagingId">
+                                    <option *ngFor="let ps of grid.pageSizes" [value]="ps">{{ps}}</option>
+                                </select>
+                            </li>
+                            <li [ngClass]="{'disabled': (grid.currentPage == 1 || grid.rowsCount == 0)}">
+                                <a href="javascript:void(0);" (click)="grid.prevPage()"><i class="glyphicon glyphicon-step-backward" aria-hidden="true"></i></a>
+                            </li>
+                            <li *ngFor="let page of grid.pagesIndex" [ngClass]="{'active': (grid.currentPage == page)}">
+                                <a href="javascript:void(0);" (click)="grid.setPage(page)">{{page}}</a>
+                            </li>
+                            <li [ngClass]="{'disabled': (grid.currentPage == grid.rowsCount || grid.rowsCount == 0)}">
+                                <a href="javascript:void(0);" (click)="grid.nextPage()"><i class="glyphicon glyphicon-step-forward" aria-hidden="true"></i></a>
+                            </li>
+                            <li class="disabled">
+                                <a href="javascript:void(0);">{{grid.currentPage}}/{{grid.rowsCount}}</a>
+                            </li>
+                        </ul>                        
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">        
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="colHeader">
+                                    <a (click)="grid.sort(grid.columns[0].id)" class="colHeader">
+                                        {{grid.columns[1].title}}
+                                    </a>
+                                </th>
+                                <th class="colHeader" *ngIf="patientEnabled">
+                                    <a (click)="grid.sort(grid.columns[2].id)" class="colHeader">
+                                        {{grid.columns[2].title}}
+                                    </a>
+                                </th>
+                                <th class="colHeader" *ngIf="patientEnabled">
+                                    <a (click)="grid.sort(grid.columns[3].id)" class="colHeader">
+                                        {{grid.columns[3].title}}
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of grid.rows">
+                                <td>
+                                    <span class="colText">
+                                        <span class="examDate">
+                                            {{row[grid.columns[0].id]}}
+                                        </span>
+                                        <span class="examOrder">
+                                            <a data-toggle="collapse" href="#{{row[grid.columns[1].id]}}">
+                                                <i class="glyphicon glyphicon-th" style="margin-right: 5px;"></i>{{row[grid.columns[1].id]}}
+                                            </a>
+                                        </span>
+                                    </span>
+                                    <span class="colText">
+                                        <span class="colText examData">
+                                            <a href="javascript:void(0);" (click)="viewExam(row)" class="examLink">
+                                                <span class="glyphicon glyphicon-search" style="margin-right: 5px;"></span>Resultados
+                                            </a>
+                                        </span>
+                                        <span class="colText examData">
+                                            <a href="javascript:void(0);" (click)="downloadExam(row)" class="examLink">
+                                                <span class="glyphicon glyphicon-download-alt" style="margin-right: 5px;"></span>Descargar
+                                            </a>
+                                        </span>
+                                    </span>
+                                    <div class="colText">
+                                        <div id="{{row[grid.columns[1].id]}}" class="collapse">
+                                            <ul class="examItemContainer">
+                                                <li *ngFor="let exam of row.lineItems" class="examItem">
+                                                    <span style="margin-right:10px;">{{exam.examName}}</span>
+                                                    <span *ngIf="exam.processed"
+                                                    [ngClass]="{'PROCESADO':'examGreen','EN PROCESO':'examYellow','CONFINDENCIAL':'examRed'}[exam.processed]"
+                                                    >{{exam.processed}}</span>
+                                                    <span *ngIf="isConfidentialState(exam.processed)">
+                                                        <div class="alert alert-info" style="margin-top: 10px; margin-bottom: 10px;">
+                                                            <strong>Resultado confidencial!</strong> Debe ser reclamado directamente en CEDIMED S.A.S.
+                                                        </div>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td *ngIf="patientEnabled">
+                                    <span class="colText examData">{{row[grid.columns[2].id]}}</span>
+                                </td>
+                                <td *ngIf="patientEnabled">                                    
+                                    <span class="colText examData">{{row[grid.columns[3].id]}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

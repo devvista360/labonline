@@ -1,0 +1,172 @@
+﻿<div style="width:100%;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h3><span class="title">Usuarios</span></h3>
+                <div>
+                    <div *ngIf="message" class="alert alert-danger" [innerHTML]="message"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="isEditing || isNew">
+            <div class="col-md-12">
+                <div style="margin-bottom: 15px; border-radius: 6px; padding: 10px; background-color: #eee; box-sizing: border-box;">
+                    <form class="form-inline" #form="ngForm" novalidate (ngSubmit)="form.valid && update();">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm text-uppercase" name="firstName" id="firstName" required
+                                    [ngClass]="{ 'InputError': firstName.errors && (firstName.dirty || firstName.touched) }"
+                                    placeholder="NOMBRES" autocomplete="off" [(ngModel)]="user.firstName" #firstName="ngModel">
+                            <div *ngIf="firstName.errors && (firstName.dirty || firstName.touched )" class="text-danger">
+                                El nombre es requerido.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm text-uppercase" name="lastName" id="lastName" required
+                                   [ngClass]="{ 'InputError': lastName.errors && (lastName.dirty || lastName.touched) }"
+                                   placeholder="APELLIDOS" autocomplete="off" [(ngModel)]="user.lastName" #lastName="ngModel">
+                            <div *ngIf="lastName.errors && (lastName.dirty || lastName.touched )" class="text-danger">
+                                Los apellidos son requeridos.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" [(ngModel)]="user.documentType"
+                                    #documentType="ngModel" required id="documentType" name="documentType"
+                                    [ngClass]="{'InputError':documentType.errors && (documentType.dirty || documentType.touched)}">
+                                <option *ngFor="let dt of documentTypes" [value]="dt.code">{{dt.name}}</option>
+                            </select>
+                            <div *ngIf="documentType.errors && (documentType.dirty || documentType.touched )" class="text-danger">
+                                El tipo de documento es requerido.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm text-uppercase" name="documentId" id="documentId" required
+                                   [ngClass]="{ 'InputError': documentId.errors && (documentId.dirty || documentId.touched) }"
+                                   placeholder="DOCUMENTO" autocomplete="off" [(ngModel)]="user.documentId" #documentId="ngModel">
+                            <div *ngIf="documentId.errors && (documentId.dirty || documentId.touched )" class="text-danger">
+                                El documento es requerido.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control input-sm" name="email" id="email" required
+                                   [ngClass]="{ 'InputError': email.errors && (email.dirty || email.touched) }"
+                                   placeholder="CORREO" autocomplete="off" [(ngModel)]="user.email" #email="ngModel">
+                            <div *ngIf="email.errors && (email.dirty || email.touched )" class="text-danger">
+                                El correo es requerido.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" [(ngModel)]="user.userType"
+                                    #userType="ngModel" required id="userType" name="userType"
+                                    [ngClass]="{'InputError':userType.errors && (userType.dirty || userType.touched)}">
+                                <option *ngFor="let ut of userTypes" [value]="ut.code">{{ut.name}}</option>
+                            </select>
+                            <div *ngIf="userType.errors && (userType.dirty || userType.touched )" class="text-danger">
+                                El tipo de usuario es requerido.
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="isEditing">
+                            <input type="checkbox" name="isActive" [(ngModel)]="user.isActive">Cuenta activa<br/>
+                            <input type="checkbox" name="isSendMail" [(ngModel)]="user.isSendMail">Enviar correo activación<br/>
+                            <input type="checkbox" name="isResetPassword" [(ngModel)]="user.isResetPassword">Reiniciar contrase&ntilde;a<br/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;<button type="submit" class="btn btn-warning btn-sm" [disabled]="form.invalid" >Guardar</button>
+                            <span *ngIf="isEditing">&nbsp;<button type="button" class="btn btn-danger btn-sm" (click)="delete()">Borrar</button></span>
+                            &nbsp;<button type="button" class="btn btn-cancel btn-sm" (click)="cancel(); form.reset();">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-inline">
+                    <div class="form-group" style="margin-right: 10px">
+                        <ul class="pagination pagination-sm" style="margin: 0px">
+                            <li>
+                                <div class="input-group">
+                                    <input class="form-control" (input)="filter = $event.target.value" maxlength="30" size="15" style="height: 30px;"
+                                    placeholder="Buscar..." title="Use * para todos, número de documento, parte del nombre o parte del correo"
+                                    (keyup.enter)="getPeople()" type="text" aria-describedby="search" autofocus />
+                                    <span class="input-group-addon" id="search"><span class="glyphicon glyphicon-search" (click)="getPeople()"></span></span>
+                                </div>                                
+                            </li>
+                            <li>
+                                <img *ngIf="isLoading" src="/assets/spin.svg" width="24" height="24" />
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" style="margin-right: 10px">
+                        <ul class="pagination pagination-sm" style="margin: 0px">
+                            <li>
+                                <a href="javascript:void(0);" (click)="create()"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Nuevo</a>
+                            </li>
+                            <li class="disabled">
+                                <a href="javascript:void(0);">Filtro:&nbsp;<b>{{grid.itemsCount}}</b></a>
+                            </li>
+                            <li class="disabled">
+                                <a href="javascript:void(0);">Total:&nbsp;<b>{{totalRows}}</b></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" style="margin-right: 10px">
+                        <ul class="pagination pagination-sm" style="margin: 0px">
+                            <li class="disabled">
+                                <a href="javascript:void(0);">Paginaci&oacute;n:</a>
+                            </li>
+                            <li *ngFor="let ps of grid.pageSizes" [ngClass]="{'active': (grid.pageSize == ps)}">
+                                <a href="javascript:void(0);" (click)="grid.setPageSize(ps)">{{ps}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" style="margin-right: 10px">
+                        <ul class="pagination pagination-sm" style="margin: 0px">
+                            <li class="disabled">
+                                <a href="javascript:void(0);">P&aacute;gina {{grid.currentPage}} de {{grid.rowsCount}}</a>
+                            </li>                          
+                            <li [ngClass]="{'disabled': (grid.currentPage == 1 || grid.rowsCount == 0)}">
+                                <a href="javascript:void(0);" (click)="grid.prevPage()"><i class="glyphicon glyphicon-step-backward" aria-hidden="true"></i></a>
+                            </li>
+                            <li *ngFor="let page of grid.pagesIndex" [ngClass]="{'active': (grid.currentPage == page)}">
+                                <a href="javascript:void(0);" (click)="grid.setPage(page)">{{page}}</a>
+                            </li>
+                            <li [ngClass]="{'disabled': (grid.currentPage == grid.rowsCount || grid.rowsCount == 0)}">
+                                <a href="javascript:void(0);" (click)="grid.nextPage()"><i class="glyphicon glyphicon-step-forward" 
+                                    aria-hidden="true"></i></a>
+                            </li>
+                        </ul>                        
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="colHeader" *ngFor="let col of grid.columns">
+                                    <a (click)="grid.sort(col.id)" class="colHeader">{{col.title}}</a>
+                                </th>
+                                <th class="colHeader"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of grid.rows">
+                                <td class="colText" *ngFor="let col of grid.columns">{{row[col.id]}}</td>
+                                <td class="colText">
+                                    <div style="text-align:center">
+                                        <a href="javascript:void(0);" (click)="select(row)"
+                                           title="Editar"><span class="glyphicon glyphicon-pencil"></span></a>
+                                        &nbsp;
+                                        <a target="_blank" [routerLink]="['/exams']" [queryParams]="{ id: row.id }" title="Resultados">
+                                            <span class="glyphicon glyphicon-list"></span></a>                                           
+                                        &nbsp;
+                                        <a target="_blank" [routerLink]="['/audit']" [queryParams]="{ id: row.id }" title="Auditoria">
+                                            <span class="glyphicon glyphicon-eye-open"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

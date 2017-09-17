@@ -1,0 +1,61 @@
+<div class="bgLogin">
+    <div class="container">
+        <div class="row vertical-offset-100">
+            <div class="col-md-4 col-md-offset-4">
+                <p class="headerForm"></p>
+                <div>
+                    <div *ngIf="message" class="alert alert-danger" [innerHTML]="message"></div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><span class="title">¿Olvidó su contraseña?</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div *ngIf="!isSuccess">
+                            <p>
+                                Ingrese el correo electrónico que tienes registrado y recibirás 
+                                un mensaje con instrucciones para cambiar tu contraseña.
+                            </p>
+                            <form role="form" #f="ngForm" (ngSubmit)="f.form.valid && recover()" novalidate>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <input type="email" name="email" class="form-control" id="email" 
+                                            placeholder="Dirección de correo" required autofocus autocomplete="off"
+                                            [(ngModel)]="userEmail" #email="ngModel" 
+                                            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" />
+                                        <div *ngIf="email.errors && (email.dirty || email.touched)">
+                                            <div *ngIf="email.hasError('required') || email.hasError('pattern')" class="LabelError">
+                                                El correo electrónico es requerido.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-warning btn-sm" type="submit" [disabled]="isLoading || f.invalid">
+                                            Enviar correo
+                                        </button>
+                                        <a class="btn btn-cancel btn-sm" [routerLink]="['/login']">Cancelar</a>
+                                        <img *ngIf="isLoading" src="/assets/spin.svg" width="24" height="24" />
+                                    </div>                                                                
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div *ngIf="isSuccess">
+                            <p>
+                                <br />
+                                <b>Solicitud procesada correctamente</b>
+                                <br />
+                                Se envío un mensaje con instrucciones a la cuenta de correo {{userEmail}} de Resultados de Laboratorio – CediMed S.A.S.
+                                <br />
+                                Por favor comprueba el correo electrónico.
+                                <br />
+                            </p>
+                            <p>
+                                <a class="btn btn-warning btn-sm" [routerLink]="['/login']">Regresar</a>
+                            </p>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

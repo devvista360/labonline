@@ -1,0 +1,145 @@
+﻿body {
+    font-size: 11pt; 
+    font-family: 'Ropa Sans', sans-serif, arial, roboto;
+    padding-top: 45px;
+}
+.title {
+    color: #00748A;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+}
+.btn-warning {
+    background: #ff5527 !important;
+    border-color: #ff5527 !important;
+    color: white !important;
+    border-radius: 3px !important;
+}
+.btn-cancel {
+    background: #00748a !important;
+    border-color: #00748a !important;
+    color: white !important;
+    border-radius: 3px !important;
+}
+.LabelError {
+    color: #f44336;
+}
+.InputError {
+    border-color: #f44336 !important;
+}
+
+.headerForm {
+    margin: 80px auto 0px auto;
+    display: block;        
+}
+
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width : 414px) { 
+    .headerForm { 
+        margin: 10px auto 0px auto;
+        display: block;        
+    }
+}
+.navbar {background-color: #f8f8f8;}
+.navbar-default .navbar-nav > li > a, .navbar-default .navbar-brand {color: #f1f1f1;}
+.navbar-default .navbar-nav > li > a:hover, 
+.navbar-default .navbar-nav > li > a:focus {color: #ff5527; background-color: #00748a;}
+
+@media only screen and (max-width: 766px) {
+    .collapsing, .in {background-color: #f7f7f7;}
+    .collapsing ul li a, .in ul li a {color: #555!important;}
+    .collapsing ul li a:hover, .in ul li a:hover {color: #00748a!important;}
+}
+
+.bgLogin {
+    background-image: url(../assets/login.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: #eaeaea;
+    overflow: hidden;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    height: 92%;
+}
+
+.colHeader {
+    color: #fff;
+    background: #00748a;
+    font-family: 'Ropa Sans', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 13px !important;
+    text-transform: uppercase;
+    padding: 5px 4px 5px 6px;
+}
+
+.colText {
+    font-size: 15px !important;
+    font-family: segoe-ui_normal,Segoe UI,Segoe,Segoe WP,Helvetica Neue,Helvetica,sans-serif;
+}
+
+a:hover { color:#ED6A00 !important; text-decoration: none; }
+
+.active {
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.patientHeaderInfo {
+   float: left;
+   margin: 5px;
+   height: auto;
+   color: #ED6A00;
+   font-size: 15px;
+   font-weight: 500;
+}
+
+.examDate {
+    color: #e2552e;
+}
+.examOrder {
+    color: #00748a;
+    margin-left: 10px;
+}
+.examData {
+    margin-left: 10px;
+    color: #3d3d3d;
+}
+.examTest {
+    margin-right: 10px;
+    float: left;
+}
+.examLink {
+    color: #666666;
+}
+.examItem {
+    color: #333;
+    margin-left: 20px;
+}
+.examItemContainer {
+    border: 1px solid #00748d;
+    border-radius: 4px;
+    margin: 15px 10px 10px 10px;
+    padding: 10px;
+}
+.examGreen {
+    Background:#d6e9c6;
+    color: #3c763d;
+}
+
+.examYellow {
+    Background:#fcf8e3;
+    color: #8a6d3b;
+}
+.examRed {
+    Background:#f2dede;
+    color: #a94442;
+}
